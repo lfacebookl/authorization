@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.uiButton {
+  background-color: #4267b2;
+  border: solid 1px #29487d;
+}
+.uiButton:active {
+  background-color: #365899;
+
+  border: solid 2px #87a6db;
+}
+.uiButton:hover {
+  background-color: #365899;
+}
+
+.new-btn {
+  background-color: #42b72a;
+  border-color: #42b72a;
+}
