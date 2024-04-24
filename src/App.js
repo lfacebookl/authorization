@@ -1,11 +1,44 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { FiMinus } from "react-icons/fi";
-import { FaFacebookSquare, FaRegSquare } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
 import { RiFacebookBoxFill } from "react-icons/ri";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore/lite";
+import { app } from "./firebaseConfig";
+import { useEffect, useState } from "react";
 
 function App() {
+  const db = getFirestore(app);
+  const [user, setUser] = useState({
+    email: "",
+    contraseña: "",
+  });
+
+  async function getData() {
+    const citiesCol = collection(db, "datos");
+    const citySnapshot = await getDocs(citiesCol);
+    const cityList = citySnapshot.docs.map((doc) => doc.data());
+    console.log(cityList);
+  }
+
+  const handleChange = (event) => {
+    const target = event.target;
+    setUser({ ...user, [target.name]: target.value });
+  };
+
+  const createRegister = async () => {
+    const data = await addDoc(collection(db, "datos"), user);
+    console.log(data);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="App">
       <div className="w-screen h-screen ">
@@ -27,7 +60,7 @@ function App() {
             <b> RH-Solutions</b>.
           </p>
         </div>
-        <div className=" w-full justify-center text-center mt-5  ">
+        <div className=" w-full justify-center text-center mt-5   ">
           <div className="flex justify-center ">
             <div>
               <p className="w-24 text-xs font-semibold text-start text-gray-600">
@@ -36,12 +69,15 @@ function App() {
             </div>
             <div>
               <input
-                className="h-6 p-2 mt-1"
+                onChange={($event) => handleChange($event)}
+                value={user.email}
+                className="h-6 p-2 mt-1 text-xs w-48"
+                name="email"
                 style={{ border: "solid 1px #dddfe2" }}
               ></input>
             </div>
           </div>
-          <div className="flex justify-center item-center mt-3">
+          <div className="flex justify-center item-center mt-3 ">
             <div>
               <p
                 className="w-24 text-xs font-semibold text-start"
@@ -52,13 +88,20 @@ function App() {
             </div>
             <div>
               <input
-                className="h-6 p-2 "
+                name="contraseña"
+                type="password"
+                onChange={($event) => handleChange($event)}
+                value={user.contraseña}
+                className="h-6 p-2 text-xs w-48 "
                 style={{ border: "solid 1px #dddfe2" }}
               ></input>
             </div>
           </div>
           <div>
-            <button className="uiButton px-2 py-1 text-xs font-bold mb-1.5 text-white rounded-sm mt-4">
+            <button
+              onClick={() => createRegister()}
+              className="uiButton px-2 py-1 text-xs font-bold mb-1.5 text-white rounded-sm mt-4"
+            >
               Iniciar Sesión
             </button>
           </div>
